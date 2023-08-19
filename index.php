@@ -18,6 +18,7 @@
     $system = new DriverBalancingSimulation($config);
     echo '<pre>';
     print_r($system->getRestaurants());
+//    print_r($system->getLoadsByRestaurant());
     echo '</pre>';
     ?>
   </body>

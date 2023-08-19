@@ -23,7 +23,9 @@ class Driver
         private int $initialRestaurantId,
         private float $initialLat,
         private float $initialLng
-    ) {}
+    ) {
+        $this->calculatePossibleTransfers();
+    }
 
     public function getId(): int
     {
@@ -42,6 +44,7 @@ class Driver
             $this->initialRestaurantId,
             $this->initialLat,
             $this->initialLng,
+            $this->possibleTransfers,
             $this->isTransferred,
         ];
     }
@@ -50,7 +53,7 @@ class Driver
     {
         $this->possibleTransfers = [];
         foreach ($this->config['restaurants'] as $restaurantArr) {
-            if ($this->restaurantId === $restaurantArr[0]) {
+            if ($this->initialRestaurantId === $restaurantArr[0]) {
                 continue;
             }
 

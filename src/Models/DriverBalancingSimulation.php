@@ -54,16 +54,8 @@ class DriverBalancingSimulation
         }
 
         $this->restaurants = [];
-        $restaurant = new Restaurant($this->config, $this->config['restaurants'][0][0], 1);
-        $this->restaurants[] = $restaurant;
-        $drivers = $restaurant->getDrivers();
-        $lastDriver = !empty($drivers) ? end($drivers) : null;
-        $nextDriverId = $lastDriver ? $lastDriver->getId() + 1 : 1;
+        $nextDriverId = 0;
         foreach ($this->config['restaurants'] as $restaurantKey => $restaurantArr) {
-            if ($restaurantKey === 0) {
-                continue;
-            }
-
             $restaurant = new Restaurant($this->config, $this->config['restaurants'][$restaurantKey][0], $nextDriverId);
             $this->restaurants[] = $restaurant;
             $drivers = $restaurant->getDrivers();

@@ -2,6 +2,7 @@
 
 namespace Drivers\Models;
 
+use Drivers\Exceptions\ApplicationException;
 use Drivers\Helpers\Location;
 
 /**
@@ -79,7 +80,7 @@ class Restaurant
         }
         
         if ($this->id < 1) {
-            throw new \Exception('No such restaurant id in config list.');
+            throw new ApplicationException('No such restaurant id in config list.');
         }
     }
     
