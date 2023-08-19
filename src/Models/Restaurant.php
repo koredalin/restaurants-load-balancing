@@ -85,8 +85,7 @@ class Restaurant
         $this->drivers = [];
         $driversCount = rand($this->config['minDriversPerRestaurant'], $this->config['maxDriversPerRestaurant']);
         for ($ii = 0; $ii < $driversCount; $ii++) {
-            $driver = new Driver($driverStartId + $ii);
-            $driver->calculateCoordinates($this->lat, $this->lng);
+            $driver = new Driver($driverStartId + $ii, $this->lat, $this->lng, $this->config['driverMaxTransferDistanceInMeters']);
             $this->drivers[] = $driver;
         }
     }

@@ -20,4 +20,5 @@ return [
     'maxOrdersPerRestaurant' => 20,
     'driverMaxTransfers' => 1,
     'maxLoadCascades' => 4,
+    'driverMaxTransferDistanceInMeters' => 6000,
 ];
