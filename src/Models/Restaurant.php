@@ -2,6 +2,8 @@
 
 namespace Drivers\Models;
 
+use Drivers\Helpers\Location;
+
 /**
  * Description of Restaurant
  *
@@ -25,6 +27,7 @@ class Restaurant
         $this->setRestaurant($restaurantId);
         $this->createDrivers($driverStartId);
         $this->createOrders();
+        $this->calculateLoad();
     }
     
     public function getId(): int
@@ -61,7 +64,7 @@ class Restaurant
     
     public function calculateLoad(): void
     {
-        // TODO
+        $this->currentLoad = (int) round($this->orders / 2 - count($this->drivers));
     }
 
     private function setRestaurant(int $restaurantId): void
@@ -85,7 +88,8 @@ class Restaurant
         $this->drivers = [];
         $driversCount = rand($this->config['minDriversPerRestaurant'], $this->config['maxDriversPerRestaurant']);
         for ($ii = 0; $ii < $driversCount; $ii++) {
-            $driver = new Driver($driverStartId + $ii, $this->lat, $this->lng, $this->config['driverMaxTransferDistanceInMeters']);
+            $driverInitialCoordinates = Location::generateRandomPoint([$this->lat, $this->lng], $this->config['driverMaxTransferDistanceInMeters']);
+            $driver = new Driver($this->config, $driverStartId + $ii, $this->id, $driverInitialCoordinates[0], $driverInitialCoordinates[1]);
             $this->drivers[] = $driver;
         }
     }

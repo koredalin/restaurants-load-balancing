@@ -37,6 +37,16 @@ class DriverBalancingSimulation
         return $this->restaurants;
     }
     
+    public function getLoadsByRestaurant(): array
+    {
+        $result = [];
+        foreach ($this->restaurants as $restaurant) {
+            $result[] = [$restaurant->getId(), $restaurant->currentLoad];
+        }
+        
+        return $result;
+    }
+    
     private function createRestaurants(): void
     {
         if (empty($this->config['restaurants'])) {
