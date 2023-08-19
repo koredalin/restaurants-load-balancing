@@ -1,6 +1,6 @@
 {
     "name": "hhristov/drivers",
-    "description": "Order Drivers",
+    "description": "Food Drivers",
     "autoload": {
         "psr-4": {
             "Drivers\\": "src/"
