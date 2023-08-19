@@ -1,0 +1,15 @@
+{
+    "name": "hhristov/drivers",
+    "description": "Order Drivers",
+    "autoload": {
+        "psr-4": {
+            "Drivers\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Hristo Hristov",
+            "email": "koredalin@gmail.com"
+        }
+    ]
+}
