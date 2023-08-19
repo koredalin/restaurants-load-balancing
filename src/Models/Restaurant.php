@@ -19,6 +19,10 @@ class Restaurant
     private array $drivers;
     private int $orders;
     public int $currentLoad;
+    /**
+     * If the restaurant is more than 6km than the nearest driver.
+     */
+    public bool $farAway = false;
     
     public function __construct(
         private array $config,
@@ -27,13 +31,21 @@ class Restaurant
     ) {
         $this->setRestaurant($restaurantId);
         $this->createDrivers($driverStartId);
-        $this->createOrders();
-        $this->calculateLoad();
     }
-    
+
     public function getId(): int
     {
         return $this->id;
+    }
+
+    public function getLat(): int
+    {
+        return $this->lat;
+    }
+
+    public function getLng(): int
+    {
+        return $this->lng;
     }
     
     public function getDrivers(): array
@@ -54,13 +66,18 @@ class Restaurant
     public function removeDriver(int $idDriver): void
     {
         foreach ($this->drivers as $driverKey => $driver) {
-            if ($driver.id === $idDriver) {
+            if ($driver->getId() === $idDriver) {
                 unset($this->drivers[$driverKey]);
                 array_values($this->drivers);
 
                 return;
             }
         }
+    }
+
+    public function createOrders(): void
+    {
+        $this->orders = rand($this->config['minOrdersPerRestaurant'], $this->config['maxOrdersPerRestaurant']);
     }
     
     public function calculateLoad(): void
@@ -93,10 +110,5 @@ class Restaurant
             $driver = new Driver($this->config, $driverStartId + $ii, $this->id, $driverInitialCoordinates[0], $driverInitialCoordinates[1]);
             $this->drivers[] = $driver;
         }
-    }
-
-    private function createOrders(): void
-    {
-        $this->orders = rand($this->config['minOrdersPerRestaurant'], $this->config['maxOrdersPerRestaurant']);
     }
 }

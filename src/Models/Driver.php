@@ -32,6 +32,21 @@ class Driver
         return $this->id;
     }
 
+    public function getInitialRestaurantId(): int
+    {
+        return $this->initialRestaurantId;
+    }
+
+    public function getInitialLat(): int
+    {
+        return $this->initialLat;
+    }
+
+    public function getInitialLng(): int
+    {
+        return $this->initialLng;
+    }
+
     public function getPossibleTransfers(): array
     {
         return $this->possibleTransfers;

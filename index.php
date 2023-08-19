@@ -16,6 +16,8 @@
     $config = require_once './src/config/config.php';
 
     $system = new DriverBalancingSimulation($config);
+    $system->CreateRandomFreeDrivers();
+    $system->RandomizedLoad();
     echo '<pre>';
     print_r($system->getRestaurants());
 //    print_r($system->getLoadsByRestaurant());
