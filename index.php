@@ -18,11 +18,12 @@
     $system = new DriverBalancingSimulation($config);
     $system->CreateRandomFreeDrivers();
     $system->RandomizedLoad();
-    $system->CalculateBalance();
     echo '<pre>';
+    print_r($system->getLoadByRestaurants());
+    $system->CalculateBalance();
     print_r($system->getDriverTransfers());
-    print_r($system->getRestaurants());
 //    print_r($system->getLoadsByRestaurant());
+//    print_r($system->getRestaurants());
     echo '</pre>';
     ?>
   </body>

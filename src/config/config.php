@@ -21,4 +21,5 @@ return [
     'driverMaxTransfers' => 1,
     'maxLoadCascades' => 3,
     'driverMaxTransferDistanceInMeters' => 6000,
+    'restaurantsWithExcessDriversМaxGlobalIterations' => 3,
 ];

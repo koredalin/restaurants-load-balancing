@@ -17,6 +17,11 @@ class Restaurant
     private float $lat;
     private float $lng;
     private array $drivers;
+    /**
+     * Maps $this->drivers array.
+     * $driverId => $this->driversKey.
+     */
+    private array $driversMap;
     private int $orders;
     public int $currentLoad;
     /**
@@ -47,10 +52,20 @@ class Restaurant
     {
         return $this->lng;
     }
-    
+
     public function getDrivers(): array
     {
         return $this->drivers;
+    }
+
+    public function getDriverById(int $driverId): Driver
+    {
+        $driver = $this->drivers[$this->driversMap[$driverId]] ?? null;
+        if (!$driver) {
+            throw new ApplicationException('No such driver.');
+        }
+        
+        return $driver;
     }
     
     public function getOrders(): int
@@ -65,12 +80,21 @@ class Restaurant
         $driver->lng = $this->lng;
         $driver->isTransferred = true;
         $this->drivers[] = $driver;
+        $this->driversMap[$driver->getId()] = array_key_last($this->drivers);
     }
-    
-    public function removeDriver(int $idDriver): void
+
+    public function addDriverBack(Driver $driver): void
+    {
+        $driver->setBack();
+        $this->drivers[] = $driver;
+        $this->driversMap[$driver->getId()] = array_key_last($this->drivers);
+    }
+
+    public function removeDriverById(int $driverId): void
     {
         foreach ($this->drivers as $driverKey => $driver) {
-            if ($driver->getId() === $idDriver) {
+            if ($driver->getId() === $driverId) {
+                unset($this->driversMap[$driver->getId()]);
                 unset($this->drivers[$driverKey]);
                 array_values($this->drivers);
 
@@ -108,11 +132,14 @@ class Restaurant
     private function createDrivers(int $driverStartId): void
     {
         $this->drivers = [];
+        $this->driversMap = [];
+        $driverKey = 0;
         $driversCount = rand($this->config['minDriversPerRestaurant'], $this->config['maxDriversPerRestaurant']);
         for ($ii = 0; $ii < $driversCount; $ii++) {
             $driverInitialCoordinates = Location::generateRandomPoint([$this->lat, $this->lng], $this->config['driverMaxTransferDistanceInMeters']);
             $driver = new Driver($this->config, $driverStartId + $ii, $this->id, $driverInitialCoordinates[0], $driverInitialCoordinates[1]);
-            $this->drivers[] = $driver;
+            $this->drivers[$driverKey] = $driver;
+            $this->driversMap[$driver->getId()] = $driverKey++;
         }
     }
 }

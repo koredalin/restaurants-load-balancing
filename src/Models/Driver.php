@@ -19,7 +19,7 @@ class Driver
     private int $initialRestaurantId;
     private float $initialLat;
     private float $initialLng;
-    
+
     public function __construct(
         private array $config,
         private int $id,
@@ -38,7 +38,7 @@ class Driver
         return $this->id;
     }
 
-    public function setBack(): int
+    public function setBack(): void
     {
         $this->restaurantId = $this->initialRestaurantId;
         $this->lat = $this->initialLat;
