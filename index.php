@@ -19,10 +19,14 @@
     $system->CreateRandomFreeDrivers();
     $system->RandomizedLoad();
     echo '<pre>';
+    echo '<h3>Initial restaurants load.</h3>'.PHP_EOL;
     print_r($system->getLoadByRestaurants());
+    echo '<h3>Rrestaurants load after estimations.</h3>'.PHP_EOL;
     $system->CalculateBalance();
+    echo '<h3>Drivers Transfers.</h3>'.PHP_EOL;
     print_r($system->getDriverTransfers());
-//    print_r($system->getLoadsByRestaurant());
+    echo '<h3>Rrestaurants load after estimations.</h3>'.PHP_EOL;
+    print_r($system->getLoadByRestaurants());
 //    print_r($system->getRestaurants());
     echo '</pre>';
     ?>

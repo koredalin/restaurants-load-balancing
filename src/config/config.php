@@ -21,5 +21,11 @@ return [
     'driverMaxTransfers' => 1,
     'maxLoadCascades' => 3,
     'driverMaxTransferDistanceInMeters' => 6000,
+    /**
+     * If we found that there is useless transfers (A transfer from restaurant in need.) on the first estimations block..
+     * These restaurants are skipped from the estimations.
+     * But the estimations and transfers continue.
+     * So, at later moment there could have better possible driver transfers.
+     */
     'restaurantsWithExcessDriversМaxGlobalIterations' => 3,
 ];
