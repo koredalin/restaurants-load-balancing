@@ -16,14 +16,20 @@ class Driver
      */
     private array $possibleTransfers;
     public bool $isTransferred = false;
+    private int $initialRestaurantId;
+    private float $initialLat;
+    private float $initialLng;
     
     public function __construct(
         private array $config,
         private int $id,
-        private int $initialRestaurantId,
-        private float $initialLat,
-        private float $initialLng
+        public int $restaurantId,
+        public float $lat,
+        public float $lng
     ) {
+        $this->initialRestaurantId = $this->restaurantId;
+        $this->initialLat = $this->lat;
+        $this->initialLng = $this->lng;
         $this->calculatePossibleTransfers();
     }
 
@@ -32,19 +38,12 @@ class Driver
         return $this->id;
     }
 
-    public function getInitialRestaurantId(): int
+    public function setBack(): int
     {
-        return $this->initialRestaurantId;
-    }
-
-    public function getInitialLat(): int
-    {
-        return $this->initialLat;
-    }
-
-    public function getInitialLng(): int
-    {
-        return $this->initialLng;
+        $this->restaurantId = $this->initialRestaurantId;
+        $this->lat = $this->initialLat;
+        $this->lng = $this->initialLng;
+        $this->isTransferred = false;
     }
 
     public function getPossibleTransfers(): array
@@ -56,9 +55,9 @@ class Driver
     {
         return [
             $this->id,
-            $this->initialRestaurantId,
-            $this->initialLat,
-            $this->initialLng,
+            $this->restaurantId,
+            $this->lat,
+            $this->lng,
             $this->possibleTransfers,
             $this->isTransferred,
         ];
@@ -68,11 +67,11 @@ class Driver
     {
         $this->possibleTransfers = [];
         foreach ($this->config['restaurants'] as $restaurantArr) {
-            if ($this->initialRestaurantId === $restaurantArr[0]) {
+            if ($this->restaurantId === $restaurantArr[0]) {
                 continue;
             }
 
-            $distance = Location::calculateDistance($this->initialLat, $this->initialLng, $restaurantArr[2], $restaurantArr[3]);
+            $distance = Location::calculateDistance($this->lat, $this->lng, $restaurantArr[2], $restaurantArr[3]);
             if ($distance <= $this->config['driverMaxTransferDistanceInMeters']) {
                 $this->possibleTransfers[] = $restaurantArr[0];
             }

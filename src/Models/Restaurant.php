@@ -38,12 +38,12 @@ class Restaurant
         return $this->id;
     }
 
-    public function getLat(): int
+    public function getLat(): float
     {
         return $this->lat;
     }
 
-    public function getLng(): int
+    public function getLng(): float
     {
         return $this->lng;
     }
@@ -60,6 +60,10 @@ class Restaurant
     
     public function addDriver(Driver $driver): void
     {
+        $driver->restaurantId = $this->id;
+        $driver->lat = $this->lat;
+        $driver->lng = $this->lng;
+        $driver->isTransferred = true;
         $this->drivers[] = $driver;
     }
     

@@ -19,6 +19,6 @@ return [
     'minOrdersPerRestaurant' => 0,
     'maxOrdersPerRestaurant' => 20,
     'driverMaxTransfers' => 1,
-    'maxLoadCascades' => 4,
+    'maxLoadCascades' => 3,
     'driverMaxTransferDistanceInMeters' => 6000,
 ];
