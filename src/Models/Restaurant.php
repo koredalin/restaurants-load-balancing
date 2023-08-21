@@ -16,7 +16,6 @@ class Restaurant
     private string $name;
     private float $lat;
     private float $lng;
-    private array $drivers;
     /**
      * Maps $this->drivers array.
      * $driverId => $this->driversKey.
@@ -32,10 +31,13 @@ class Restaurant
     public function __construct(
         private array $config,
         int $restaurantId,
-        int $driverStartId
+        private array $drivers
     ) {
         $this->setRestaurant($restaurantId);
-        $this->createDrivers($driverStartId);
+        $this->driversMap = [];
+        foreach ($this->drivers as $key => $driver) {
+            $this->driversMap[$driver->getId()] = $key;
+        }
     }
 
     public function getId(): int
@@ -130,20 +132,6 @@ class Restaurant
         
         if ($this->id < 1) {
             throw new ApplicationException('No such restaurant id in config list.');
-        }
-    }
-    
-    private function createDrivers(int $driverStartId): void
-    {
-        $this->drivers = [];
-        $this->driversMap = [];
-        $driverKey = 0;
-        $driversCount = rand($this->config['minDriversPerRestaurant'], $this->config['maxDriversPerRestaurant']);
-        for ($ii = 0; $ii < $driversCount; $ii++) {
-            $driverInitialCoordinates = Location::generateRandomPoint([$this->lat, $this->lng], $this->config['driverMaxTransferDistanceInMeters']);
-            $driver = new Driver($driverStartId + $ii, $this->id, $driverInitialCoordinates[0], $driverInitialCoordinates[1]);
-            $this->drivers[$driverKey] = $driver;
-            $this->driversMap[$driver->getId()] = $driverKey++;
         }
     }
 }

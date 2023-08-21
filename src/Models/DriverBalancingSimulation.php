@@ -21,6 +21,7 @@ class DriverBalancingSimulation implements DriverBalancingSimulationInterface
      * $restaurantId => $this->restaurantsKey.
      */
     private array $restaurantsMap;
+    private array $driverTransfersSetBack;
 
     public function __construct(
         private array $config
@@ -28,9 +29,19 @@ class DriverBalancingSimulation implements DriverBalancingSimulationInterface
         $this->globalIterations = 0;
     }
 
+    public function getRestaurants(): array
+    {
+        return $this->restaurants;
+    }
+
     public function getDriverTransfers(): array
     {
         return $this->driverTransfers;
+    }
+
+    public function getDriverTransfersSetBack(): array
+    {
+        return $this->driverTransfersSetBack;
     }
 
     /**
@@ -51,7 +62,8 @@ class DriverBalancingSimulation implements DriverBalancingSimulationInterface
         $restaurantKey = 0;
         $nextDriverId = 0;
         foreach ($this->config['restaurants'] as $restaurantKey => $restaurantArr) {
-            $restaurant = new Restaurant($this->config, $this->config['restaurants'][$restaurantKey][0], $nextDriverId);
+            $restaurantDrivers = $this->getRestaurantDrivers($restaurantArr, $nextDriverId);
+            $restaurant = new Restaurant($this->config, $this->config['restaurants'][$restaurantKey][0], $restaurantDrivers);
             $this->restaurants[$restaurantKey] = $restaurant;
             $this->restaurantsMap[$restaurant->getId()] = $restaurantKey++;
             $drivers = $restaurant->getDrivers();
@@ -81,6 +93,7 @@ class DriverBalancingSimulation implements DriverBalancingSimulationInterface
     {
         $this->driverTransfers = [];
         $this->impossibleTransfersToRestaurantIds = [];
+        $this->driverTransfersSetBack = [];
         $this->calculateBalanceSingleNeedTransfers();
         foreach ($this->driverTransfers as $key => $transferGroup) {
             if (empty($transferGroup)) {
@@ -105,9 +118,6 @@ class DriverBalancingSimulation implements DriverBalancingSimulationInterface
                 $this->CalculateBalance();
             }
         }
-        
-//        var_dump('$this->impossibleTransfersToRestaurantIds');
-//        print_r($this->impossibleTransfersToRestaurantIds);
     }
 
     public function getLoadByRestaurants(): array
@@ -118,6 +128,41 @@ class DriverBalancingSimulation implements DriverBalancingSimulationInterface
         }
 
         return $result;
+    }
+
+    /**
+     * Creates a list of Drivers for a restaurant from the config file.
+     *
+     * @param array $restaurantArr Current restaurant from the config file.
+     * @param int $driverStartId
+     * @return void
+     */
+    private function getRestaurantDrivers(array $restaurantArr, int $driverStartId): array
+    {
+        $drivers = [];
+        $driverKey = 0;
+        $driversCount = rand($this->config['minDriversPerRestaurant'], $this->config['maxDriversPerRestaurant']);
+        for ($ii = 0; $ii < $driversCount; $ii++) {
+            $driverInitialCoordinates = Location::generateRandomPoint([$restaurantArr[2], $restaurantArr[3]], $this->config['driverMaxTransferDistanceInMeters']);
+            $driver = new Driver($driverStartId + $ii, $restaurantArr[0], $driverInitialCoordinates[0], $driverInitialCoordinates[1]);
+            $drivers[$driverKey] = $driver;
+        }
+        
+        return $drivers;
+    }
+
+    private function getRestaurantById(int $id): Restaurant
+    {
+        if (!array_key_exists($id, $this->restaurantsMap)) {
+            throw new ApplicationException('No restaurant with id: ' . $id);
+        }
+
+        $restaurantKey = $this->restaurantsMap[$id];
+        if (!array_key_exists($restaurantKey, $this->restaurants)) {
+            throw new ApplicationException('No restaurant with key: ' . $restaurantKey);
+        }
+
+        return $this->restaurants[$this->restaurantsMap[$id]];
     }
 
     private function calculateBalanceSingleNeedTransfers(): void
@@ -147,10 +192,10 @@ class DriverBalancingSimulation implements DriverBalancingSimulationInterface
 
         $tranferGroup = $this->driverTransfers[array_key_last($this->driverTransfers)];
         $tranferGroupLastOperation = !empty($tranferGroup) ? $tranferGroup[array_key_last($tranferGroup)] : [];
-        if ($ii === $this->config['maxLoadCascades'] && array_key_exists('rLoad', $tranferGroupLastOperation) && $tranferGroupLastOperation['rLoad'] >= 0) {
+        $restaurantTransferFrom = !empty($tranferGroupLastOperation) ? $this->getRestaurantById($tranferGroupLastOperation['rId']) : null;
+        if ($ii === $this->config['maxLoadCascades'] && $tranferGroupLastOperation && $restaurantTransferFrom->currentLoad >= 0) {
             $this->impossibleTransfersToRestaurantIds[] = $tranferGroup[0]['transferredToRId'];
             $this->setBackLastTransfersGroup();
-            unset($this->driverTransfers[array_key_last($this->driverTransfers)]);
         }
 
         $this->calculateBalanceSingleNeedTransfers();
@@ -161,19 +206,17 @@ class DriverBalancingSimulation implements DriverBalancingSimulationInterface
         $lastTransferKey = array_key_last($this->driverTransfers);
         $lastTransfer = $this->driverTransfers[$lastTransferKey];
         foreach(array_reverse($lastTransfer) as $singleDriverTransfer) {
-            $restaurantTransferTo = $this->restaurants[$this->restaurantsMap[$singleDriverTransfer['transferredToRId']]];
-            $restaurantTransferFrom = $this->restaurants[$this->restaurantsMap[$singleDriverTransfer['rId']]];
+            $restaurantTransferTo = $this->getRestaurantById($singleDriverTransfer['transferredToRId']);
+            $restaurantTransferFrom = $this->getRestaurantById($singleDriverTransfer['rId']);
             $driver = $restaurantTransferTo->getDriverById($singleDriverTransfer['dId']);
             $restaurantTransferFrom->addDriverBack($driver);
             $restaurantTransferFrom->currentLoad--;
             $restaurantTransferTo->removeDriverById($driver->getId());
             $restaurantTransferTo->currentLoad++;
         }
-    }
 
-    public function getRestaurants(): array
-    {
-        return $this->restaurants;
+        $this->driverTransfersSetBack[] = $this->driverTransfers[$lastTransferKey];
+        unset($this->driverTransfers[$lastTransferKey]);
     }
 
     private function getHighestLoadRestaurant(): ?Restaurant
