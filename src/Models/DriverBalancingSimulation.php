@@ -140,12 +140,11 @@ class DriverBalancingSimulation implements DriverBalancingSimulationInterface
     private function getRestaurantDrivers(array $restaurantArr, int $driverStartId): array
     {
         $drivers = [];
-        $driverKey = 0;
         $driversCount = rand($this->config['minDriversPerRestaurant'], $this->config['maxDriversPerRestaurant']);
         for ($ii = 0; $ii < $driversCount; $ii++) {
             $driverInitialCoordinates = Location::generateRandomPoint([$restaurantArr[2], $restaurantArr[3]], $this->config['driverMaxTransferDistanceInMeters']);
             $driver = new Driver($driverStartId + $ii, $restaurantArr[0], $driverInitialCoordinates[0], $driverInitialCoordinates[1]);
-            $drivers[$driverKey] = $driver;
+            $drivers[] = $driver;
         }
         
         return $drivers;
@@ -293,10 +292,10 @@ class DriverBalancingSimulation implements DriverBalancingSimulationInterface
         $restaurantTransferTo->currentLoad--;
         $this->driverTransfers[array_key_last($this->driverTransfers)][] = [
             'rId' => $restaurantTransferFrom->getId(),
-            'rLoad' => $restaurantTransferFrom->currentLoad,
+//            'rLoad' => $restaurantTransferFrom->currentLoad,
             'dId' => $driver->getId(),
             'transferredToRId' => $restaurantTransferTo->getId(),
-            'transferredToRLoad' => $restaurantTransferTo->currentLoad,
+//            'transferredToRLoad' => $restaurantTransferTo->currentLoad,
         ];
 
         if ($restaurantTransferFrom->currentLoad < 0) {
