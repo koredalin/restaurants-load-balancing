@@ -26,6 +26,7 @@ return [
      * These restaurants are skipped from the estimations.
      * But the estimations and transfers continue.
      * So, at later moment there could have better possible driver transfers.
+     * If set a number less then 2 - only one global iteration will be made.
      */
-    'restaurantsWithExcessDriversМaxGlobalIterations' => 3,
+    'restaurantsWithExcessDriversМaxGlobalIterations' => 1,
 ];

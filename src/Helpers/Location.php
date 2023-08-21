@@ -82,7 +82,6 @@ class Location
         $y3 = -$x2 * sin( $rot ) + $y2 * cos( $rot );
         $z3 = $z2;
 
-
         //Finally convert this point to polar co-ords
         $lngRads = atan2( $x3, $y3 );
         $latRads = asin( $z3 );

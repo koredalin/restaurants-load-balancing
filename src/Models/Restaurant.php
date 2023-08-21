@@ -3,7 +3,6 @@
 namespace Drivers\Models;
 
 use Drivers\Exceptions\ApplicationException;
-use Drivers\Helpers\Location;
 
 /**
  * Description of Restaurant
@@ -63,6 +62,16 @@ class Restaurant
     public function getDriversMap(): array
     {
         return $this->driversMap;
+    }
+
+    public function getDriverArrs(): array
+    {
+        $result = [];
+        foreach ($this->drivers as $driver) {
+            $result[] = $driver->toArray();
+        }
+
+        return $result;
     }
 
     public function getDriverById(int $driverId): Driver

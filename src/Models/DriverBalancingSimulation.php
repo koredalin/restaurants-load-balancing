@@ -60,7 +60,7 @@ class DriverBalancingSimulation implements DriverBalancingSimulationInterface
         $this->restaurants = [];
         $this->restaurantsMap = [];
         $restaurantKey = 0;
-        $nextDriverId = 0;
+        $nextDriverId = 1;
         foreach ($this->config['restaurants'] as $restaurantKey => $restaurantArr) {
             $restaurantDrivers = $this->getRestaurantDrivers($restaurantArr, $nextDriverId);
             $restaurant = new Restaurant($this->config, $this->config['restaurants'][$restaurantKey][0], $restaurantDrivers);
@@ -112,9 +112,9 @@ class DriverBalancingSimulation implements DriverBalancingSimulationInterface
 
         foreach ($this->getLoadByRestaurants() as $restaurantLoad) {
             if ($restaurantLoad >= 0 && $isExcess && $this->globalIterations < $this->config['restaurantsWithExcessDriversМaxGlobalIterations']) {
-    echo '<h4>Rrestaurants load after estimations: '.$this->globalIterations.'</h4>'.PHP_EOL;
+//    echo '<h4>Rrestaurants load after estimations: '.$this->globalIterations.'</h4>'.PHP_EOL;
                 $this->globalIterations++;
-        print_r($this->getLoadByRestaurants());
+//        print_r($this->getLoadByRestaurants());
                 $this->CalculateBalance();
             }
         }
@@ -162,6 +162,16 @@ class DriverBalancingSimulation implements DriverBalancingSimulationInterface
         }
 
         return $this->restaurants[$this->restaurantsMap[$id]];
+    }
+    
+    public function getDriverArrsByRestaurantId(): array
+    {
+        $result = [];
+        foreach ($this->restaurants as $restaurant) {
+            $result[$restaurant->getId()] = $restaurant->getDriverArrs();
+        }
+
+        return $result;
     }
 
     private function calculateBalanceSingleNeedTransfers(): void
@@ -292,10 +302,8 @@ class DriverBalancingSimulation implements DriverBalancingSimulationInterface
         $restaurantTransferTo->currentLoad--;
         $this->driverTransfers[array_key_last($this->driverTransfers)][] = [
             'rId' => $restaurantTransferFrom->getId(),
-//            'rLoad' => $restaurantTransferFrom->currentLoad,
             'dId' => $driver->getId(),
             'transferredToRId' => $restaurantTransferTo->getId(),
-//            'transferredToRLoad' => $restaurantTransferTo->currentLoad,
         ];
 
         if ($restaurantTransferFrom->currentLoad < 0) {

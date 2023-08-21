@@ -11,10 +11,6 @@ use Drivers\Helpers\Location;
  */
 class Driver
 {
-    /**
-     * Restaurant ids that the driver could be transferred to.
-     */
-    private array $possibleTransfers;
     public bool $isTransferred = false;
     private float $initialLat;
     private float $initialLng;
@@ -41,19 +37,12 @@ class Driver
         $this->isTransferred = false;
     }
 
-    public function getPossibleTransfers(): array
-    {
-        return $this->possibleTransfers;
-    }
-
     public function toArray(): array
     {
         return [
             $this->id,
             $this->lat,
             $this->lng,
-            $this->possibleTransfers,
-            $this->isTransferred,
         ];
     }
 }
