@@ -21,7 +21,7 @@ class Restaurant
      */
     private array $driversMap;
     private int $orders;
-    public int $currentLoad;
+    public int $load;
     /**
      * If the restaurant is more than 6km than the nearest driver.
      */
@@ -33,10 +33,7 @@ class Restaurant
         private array $drivers
     ) {
         $this->setRestaurant($restaurantId);
-        $this->driversMap = [];
-        foreach ($this->drivers as $key => $driver) {
-            $this->driversMap[$driver->getId()] = $key;
-        }
+        $this->setDriversMap();
     }
 
     public function getId(): int
@@ -109,13 +106,15 @@ class Restaurant
     {
         foreach ($this->drivers as $driverKey => $driver) {
             if ($driver->getId() === $driverId) {
-                unset($this->driversMap[$driver->getId()]);
                 unset($this->drivers[$driverKey]);
-                array_values($this->drivers);
+                $this->drivers = array_values($this->drivers);
+                $this->setDriversMap();
 
                 return;
             }
         }
+        
+        throw new ApplicationException('Restaurant id: ' . $this->id . '. No driver with id: ', $driverId);
     }
 
     public function createOrders(): void
@@ -125,7 +124,7 @@ class Restaurant
     
     public function calculateLoad(): void
     {
-        $this->currentLoad = (int) round($this->orders / 2 - count($this->drivers));
+        $this->load = (int) round($this->orders / 2 - count($this->drivers));
     }
 
     private function setRestaurant(int $restaurantId): void
@@ -136,11 +135,19 @@ class Restaurant
                 $this->name = $restaurantArr[1];
                 $this->lat = $restaurantArr[2];
                 $this->lng = $restaurantArr[3];
+
+                return;
             }
         }
-        
-        if ($this->id < 1) {
-            throw new ApplicationException('No such restaurant id in config list.');
+
+        throw new ApplicationException('No restaurant with id: ' . $restaurantId . ' in config file.');
+    }
+
+    private function setDriversMap(): void
+    {
+        $this->driversMap = [];
+        foreach ($this->drivers as $key => $driver) {
+            $this->driversMap[$driver->getId()] = $key;
         }
     }
 }

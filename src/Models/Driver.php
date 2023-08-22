@@ -43,6 +43,7 @@ class Driver
             $this->id,
             $this->lat,
             $this->lng,
+            $this->isTransferred,
         ];
     }
 }

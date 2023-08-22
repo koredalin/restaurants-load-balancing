@@ -3,7 +3,7 @@
 namespace Drivers\Controllers;
 
 /**
- * Description of AbstractController
+ * Description of Controller
  *
  * @author H1
  */
@@ -14,6 +14,7 @@ class Controller
     protected const CONTENT_TYPE_HTML = 'text/html';
     protected const CONTENT_TYPE_JS = 'application/javascript';
     protected const CONTENT_TYPE_JSON = 'application/json';
+
     public function __construct(
         protected array $config
     ) {

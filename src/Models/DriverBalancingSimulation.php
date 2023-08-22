@@ -27,6 +27,9 @@ class DriverBalancingSimulation implements DriverBalancingSimulationInterface
         private array $config
     ) {
         $this->globalIterations = 0;
+        $this->driverTransfers = [];
+        $this->impossibleTransfersToRestaurantIds = [];
+        $this->driverTransfersSetBack = [];
     }
 
     public function getRestaurants(): array
@@ -81,19 +84,11 @@ class DriverBalancingSimulation implements DriverBalancingSimulationInterface
     }
 
     /**
-     * TODO Find the restaurant with the biggest load.
-     * TODO Find a driver to max 6000 m on a restaurant with minimal load.
-     * TODO Find the nearest driver from the second restaurant.
-     * TODO If the second restaurant has big load.
-     * Continue the same practice max 2 more times. Total max of 3 driver transfers.
      *
      * @return void
      */
     public function CalculateBalance(): void
     {
-        $this->driverTransfers = [];
-        $this->impossibleTransfersToRestaurantIds = [];
-        $this->driverTransfersSetBack = [];
         $this->calculateBalanceSingleNeedTransfers();
         foreach ($this->driverTransfers as $key => $transferGroup) {
             if (empty($transferGroup)) {
@@ -101,6 +96,7 @@ class DriverBalancingSimulation implements DriverBalancingSimulationInterface
             }
         }
         $this->driverTransfers = array_values($this->driverTransfers);
+        $this->globalIterations++;
 
         $isExcess = false;
         foreach ($this->getLoadByRestaurants() as $restaurantLoad) {
@@ -111,10 +107,9 @@ class DriverBalancingSimulation implements DriverBalancingSimulationInterface
         }
 
         foreach ($this->getLoadByRestaurants() as $restaurantLoad) {
-            if ($restaurantLoad >= 0 && $isExcess && $this->globalIterations < $this->config['restaurantsWithExcessDriversМaxGlobalIterations']) {
-//    echo '<h4>Rrestaurants load after estimations: '.$this->globalIterations.'</h4>'.PHP_EOL;
-                $this->globalIterations++;
-//        print_r($this->getLoadByRestaurants());
+            if ($restaurantLoad >= 0 && $isExcess && $this->globalIterations < $this->config['restaurantsWithExcessDriversMaxGlobalIterations']) {
+//                echo '<h4>Rrestaurants load after estimations: '.$this->globalIterations.'</h4>'.PHP_EOL;
+//                print_r($this->getLoadByRestaurants());
                 $this->CalculateBalance();
             }
         }
@@ -124,7 +119,7 @@ class DriverBalancingSimulation implements DriverBalancingSimulationInterface
     {
         $result = [];
         foreach ($this->restaurants as $restaurant) {
-            $result[$restaurant->getId()] = $restaurant->currentLoad;
+            $result[$restaurant->getId()] = $restaurant->load;
         }
 
         return $result;
@@ -174,6 +169,15 @@ class DriverBalancingSimulation implements DriverBalancingSimulationInterface
         return $result;
     }
 
+    /**
+     * Find the restaurant with the biggest load.
+     * Find a driver to max 6000 m on a restaurant with minimal load.
+     * Find the nearest driver from the second restaurant.
+     * If the second restaurant has big load.
+     * Continue the same practice max 2 more times. Total max of 3 driver transfers.
+     * 
+     * @return void
+     */
     private function calculateBalanceSingleNeedTransfers(): void
     {
         $restaurantTransferTo = $this->getHighestLoadRestaurant();
@@ -181,7 +185,7 @@ class DriverBalancingSimulation implements DriverBalancingSimulationInterface
             // No restaurants that need transfers.
             return;
         }
-        
+
         $this->driverTransfers[] = [];
         for ($ii = 0; $ii < $this->config['maxLoadCascades']; $ii++) {
             $nearestDriver = $this->getNearestLowestLoadRestaurantDriver($restaurantTransferTo);
@@ -201,9 +205,12 @@ class DriverBalancingSimulation implements DriverBalancingSimulationInterface
 
         $tranferGroup = $this->driverTransfers[array_key_last($this->driverTransfers)];
         $tranferGroupLastOperation = !empty($tranferGroup) ? $tranferGroup[array_key_last($tranferGroup)] : [];
-        $restaurantTransferFrom = !empty($tranferGroupLastOperation) ? $this->getRestaurantById($tranferGroupLastOperation['rId']) : null;
-        if ($ii === $this->config['maxLoadCascades'] && $tranferGroupLastOperation && $restaurantTransferFrom->currentLoad >= 0) {
-            $this->impossibleTransfersToRestaurantIds[] = $tranferGroup[0]['transferredToRId'];
+        $restaurantTransferFrom = !empty($tranferGroupLastOperation) ? $this->getRestaurantById($tranferGroupLastOperation['transferFromRId']) : null;
+        if (
+            ($ii === $this->config['maxLoadCascades'] && $restaurantTransferFrom && $restaurantTransferFrom->load >= 0)
+            || ($restaurantTransferTo->farAway === true && !empty($tranferGroupLastOperation))
+        ) {
+            $this->impossibleTransfersToRestaurantIds[] = $tranferGroup[0]['transferToRId'];
             $this->setBackLastTransfersGroup();
         }
 
@@ -215,13 +222,13 @@ class DriverBalancingSimulation implements DriverBalancingSimulationInterface
         $lastTransferKey = array_key_last($this->driverTransfers);
         $lastTransfer = $this->driverTransfers[$lastTransferKey];
         foreach(array_reverse($lastTransfer) as $singleDriverTransfer) {
-            $restaurantTransferTo = $this->getRestaurantById($singleDriverTransfer['transferredToRId']);
-            $restaurantTransferFrom = $this->getRestaurantById($singleDriverTransfer['rId']);
+            $restaurantTransferTo = $this->getRestaurantById($singleDriverTransfer['transferToRId']);
+            $restaurantTransferFrom = $this->getRestaurantById($singleDriverTransfer['transferFromRId']);
             $driver = $restaurantTransferTo->getDriverById($singleDriverTransfer['dId']);
             $restaurantTransferFrom->addDriverBack($driver);
-            $restaurantTransferFrom->currentLoad--;
+            $restaurantTransferFrom->load--;
             $restaurantTransferTo->removeDriverById($driver->getId());
-            $restaurantTransferTo->currentLoad++;
+            $restaurantTransferTo->load++;
         }
 
         $this->driverTransfersSetBack[] = $this->driverTransfers[$lastTransferKey];
@@ -237,8 +244,8 @@ class DriverBalancingSimulation implements DriverBalancingSimulationInterface
                 continue;
             }
 
-            if ($restaurant->currentLoad > $biggestLoad) {
-                $biggestLoad = $restaurant->currentLoad;
+            if ($restaurant->load > $biggestLoad) {
+                $biggestLoad = $restaurant->load;
                 $restaurantKey = $key;
             }
         }
@@ -253,16 +260,17 @@ class DriverBalancingSimulation implements DriverBalancingSimulationInterface
     private function getNearestLowestLoadRestaurantDriver(Restaurant $restaurant): ?Driver
     {
         $result = null;
-        $load = 21;
+        $load = ceil($this->config['maxOrdersPerRestaurant'] / 2);
+        $lastDriverDistance = $this->config['driverMaxTransferDistanceInMeters'];
         foreach ($this->restaurants as $neighborRestaurant) {
             // Skip the restaurant for which we are searching drivers.
             if ($neighborRestaurant->getId() === $restaurant->getId()) {
                 continue;
             }
 
-            foreach ($neighborRestaurant->getDrivers() as $driverKey => $driver) {
+            foreach ($neighborRestaurant->getDrivers() as $driver) {
                 if (
-                    $neighborRestaurant->currentLoad >= $load
+                    $neighborRestaurant->load >= $load
                     || $driver->isTransferred
                 ) {
                     continue;
@@ -274,8 +282,9 @@ class DriverBalancingSimulation implements DriverBalancingSimulationInterface
                     $driver->lat,
                     $driver->lng
                 );
-                if ($distanceBetweenRestaurantAndDriver <= $this->config['driverMaxTransferDistanceInMeters']) {
-                    $load = $neighborRestaurant->currentLoad;
+                if ($distanceBetweenRestaurantAndDriver <= $lastDriverDistance) {
+                    $lastDriverDistance = $distanceBetweenRestaurantAndDriver;
+                    $load = $neighborRestaurant->load;
                     $result = $driver;
                 }
             }
@@ -297,23 +306,20 @@ class DriverBalancingSimulation implements DriverBalancingSimulationInterface
     {
         $restaurantTransferFrom = $this->getRestaurantByDriverId($driver->getId());
         $restaurantTransferFrom->removeDriverById($driver->getId());
-        $restaurantTransferFrom->currentLoad++;
+        $restaurantTransferFrom->load++;
         $restaurantTransferTo->addDriver($driver);
-        $restaurantTransferTo->currentLoad--;
+        $restaurantTransferTo->load--;
         $this->driverTransfers[array_key_last($this->driverTransfers)][] = [
-            'rId' => $restaurantTransferFrom->getId(),
+            'transferFromRId' => $restaurantTransferFrom->getId(),
             'dId' => $driver->getId(),
-            'transferredToRId' => $restaurantTransferTo->getId(),
+            'transferToRId' => $restaurantTransferTo->getId(),
         ];
 
-        if ($restaurantTransferFrom->currentLoad < 0) {
+        if ($restaurantTransferFrom->load < 0) {
             return null;
         } else {
-
             return $restaurantTransferFrom;
         }
-
-        throw new ApplicationException('Driver not moved.');
     }
 
     private function getRestaurantByDriverId(int $driverId): Restaurant

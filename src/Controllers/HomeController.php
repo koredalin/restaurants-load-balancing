@@ -20,15 +20,16 @@ class HomeController extends Controller
             $system = new DriverBalancingSimulation($this->config);
             $system->CreateRandomFreeDrivers();
             $system->RandomizedLoad();
-            $responseBody['driversByRestaurantId'] = $system->getDriverArrsByRestaurantId();
+            $responseBody['driversByRestaurantIdInit'] = $system->getDriverArrsByRestaurantId();
             $responseBody['restaurantsInitialLoad'] = $system->getLoadByRestaurants();
             $system->CalculateBalance();
             $responseBody['driverTransfers'] = $system->getDriverTransfers();
+            $responseBody['driversByRestaurantIdFinal'] = $system->getDriverArrsByRestaurantId();
             $responseBody['restaurantsFinalLoad'] = $system->getLoadByRestaurants();
-            $response = json_encode($responseBody);
+            $responseJson = json_encode($responseBody);
             $this->setHeaderContentType(self::CONTENT_TYPE_JSON);
 
-            return $response;
+            return $responseJson;
         } catch (ApplicationException | \Exception $ex) {
             http_response_code(self::RESPONSE_CODE_INTERNAL_SERVER_ERROR);
             exit;
