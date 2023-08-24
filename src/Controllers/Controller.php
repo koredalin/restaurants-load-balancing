@@ -18,12 +18,14 @@ class Controller
     protected const CONTENT_TYPE_JS = 'application/javascript';
     protected const CONTENT_TYPE_JSON = 'application/json';
     protected string $serializationDir;
+    protected string $errorsDir;
 
     public function __construct(
         protected array $config
     ) {
         http_response_code(self::RESPONSE_CODE_SUCCESS);
         $this->serializationDir = __DIR__ . '/../../serialization';
+        $this->errorsDir = __DIR__ . '/../../errors';
     }
     
     protected function setHeaderContentType(string $contentType): void
@@ -32,7 +34,8 @@ class Controller
     }
 
     /**
-     * 
+     * It will be nice if we have a serialization for the data, so we will not need to estimate it multiple times.
+     *
      * @param string $text
      * @return void
      */
@@ -45,6 +48,22 @@ class Controller
 
         if ($isRecorded === false) {
             throw new ApplicationException('There is no serialization.');
+        }
+    }
+
+    /**
+     * We need errors logging.
+     *
+     * @param string $error
+     * @return void
+     * @throws ApplicationException
+     */
+    protected function logError(string $error): void
+    {
+        $isRecorded = file_put_contents($this->errorsDir . '/error_' . DTM::getTimeStamp() . '.txt', $error);
+
+        if ($isRecorded === false) {
+            throw new ApplicationException('The error is not logged.');
         }
     }
 }

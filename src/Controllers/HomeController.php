@@ -32,6 +32,7 @@ class HomeController extends Controller
 
             return $responseJson;
         } catch (ApplicationException | \Exception $ex) {
+            $this->logError($ex->getMessage());
             http_response_code(self::RESPONSE_CODE_INTERNAL_SERVER_ERROR);
             exit;
         }
