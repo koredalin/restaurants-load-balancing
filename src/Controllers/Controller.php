@@ -43,7 +43,10 @@ class Controller
     {
         $isRecorded = null;
         if ((string) filter_input(INPUT_GET, 'serialize') === '1') {
-            $isRecorded = file_put_contents($this->serializationDir . '/driver_transfers_' . DTM::getTimeStamp() . '.json', $text);
+            $isRecorded = file_put_contents(
+                $this->serializationDir . '/driver_transfers_' . DTM::getTimeStamp() . '.json',
+                $text
+            );
         }
 
         if ($isRecorded === false) {
@@ -60,7 +63,11 @@ class Controller
      */
     protected function logError(string $error): void
     {
-        $isRecorded = file_put_contents($this->errorsDir . '/error_' . DTM::getTimeStamp() . '.txt', $error);
+        $isRecorded = file_put_contents(
+            $this->errorsDir . '/error_' . DTM::getTimeStamp() . '.txt',
+            $error,
+            FILE_APPEND
+        );
 
         if ($isRecorded === false) {
             throw new ApplicationException('The error is not logged.');

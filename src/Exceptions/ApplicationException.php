@@ -7,7 +7,7 @@ namespace Drivers\Exceptions;
  *
  * @author H1
  */
-class ApplicationException extends Exception
+class ApplicationException extends \Exception
 {
     // Redefine the exception so message isn't optional
     public function __construct($message, $code = 0, Throwable $previous = null) {
