@@ -3,7 +3,8 @@
     "description": "Food Drivers",
     "autoload": {
         "psr-4": {
-            "Drivers\\": "src/"
+            "Drivers\\": "src/",
+            "Tests\\": "tests/"
         }
     },
     "authors": [
@@ -11,5 +12,8 @@
             "name": "Hristo Hristov",
             "email": "koredalin@gmail.com"
         }
-    ]
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "^10"
+    }
 }

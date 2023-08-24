@@ -99,14 +99,14 @@ class DriverBalancingSimulation implements DriverBalancingSimulationInterface
         $this->globalIterations++;
 
         $isExcess = false;
-        foreach ($this->getLoadByRestaurants() as $restaurantLoad) {
+        foreach ($this->getLoadByRestaurantIds() as $restaurantLoad) {
             if ($restaurantLoad < -1) {
                 $isExcess = true;
                 break;
             }
         }
 
-        foreach ($this->getLoadByRestaurants() as $restaurantLoad) {
+        foreach ($this->getLoadByRestaurantIds() as $restaurantLoad) {
             if ($restaurantLoad >= 0 && $isExcess && $this->globalIterations < $this->config['restaurantsWithExcessDriversMaxGlobalIterations']) {
 //                echo '<h4>Rrestaurants load after estimations: '.$this->globalIterations.'</h4>'.PHP_EOL;
 //                print_r($this->getLoadByRestaurants());
@@ -115,7 +115,7 @@ class DriverBalancingSimulation implements DriverBalancingSimulationInterface
         }
     }
 
-    public function getLoadByRestaurants(): array
+    public function getLoadByRestaurantIds(): array
     {
         $result = [];
         foreach ($this->restaurants as $restaurant) {

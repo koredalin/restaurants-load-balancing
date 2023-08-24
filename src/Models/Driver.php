@@ -2,8 +2,6 @@
 
 namespace Drivers\Models;
 
-use Drivers\Helpers\Location;
-
 /**
  * Description of Driver
  *
@@ -17,7 +15,6 @@ class Driver
 
     public function __construct(
         private int $id,
-        public int $restaurantId,
         public float $lat,
         public float $lng
     ) {

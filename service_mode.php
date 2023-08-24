@@ -24,11 +24,11 @@
     $system->RandomizedLoad();
     echo '<pre>';
     echo '<h3>Initial restaurants load.</h3>'.PHP_EOL;
-    print_r($system->getLoadByRestaurants());
+    print_r($system->getLoadByRestaurantIds());
     echo '<h3>Rrestaurants until estimations.</h3>'.PHP_EOL;
     $system->CalculateBalance();
     echo '<h3>Final Rrestaurants load.</h3>'.PHP_EOL;
-    print_r($system->getLoadByRestaurants());
+    print_r($system->getLoadByRestaurantIds());
     echo '<h3>Drivers Transfers.</h3>'.PHP_EOL;
     print_r($system->getDriverTransfers());
     echo '<h3>Drivers Transfers Set Back.</h3>'.PHP_EOL;

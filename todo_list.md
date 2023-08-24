@@ -2,9 +2,9 @@
 
 ## Back end
 
-[x] PSR-4 loading.
-
 [x] Testing index file.
+
+[x] PSR-4 loading.
 
 [x] A config file.
 

@@ -21,11 +21,11 @@ class HomeController extends Controller
             $system->CreateRandomFreeDrivers();
             $system->RandomizedLoad();
             $responseBody['driversByRestaurantIdInit'] = $system->getDriverArrsByRestaurantId();
-            $responseBody['restaurantsInitialLoad'] = $system->getLoadByRestaurants();
+            $responseBody['restaurantsInitialLoad'] = $system->getLoadByRestaurantIds();
             $system->CalculateBalance();
             $responseBody['driverTransfers'] = $system->getDriverTransfers();
             $responseBody['driversByRestaurantIdFinal'] = $system->getDriverArrsByRestaurantId();
-            $responseBody['restaurantsFinalLoad'] = $system->getLoadByRestaurants();
+            $responseBody['restaurantsFinalLoad'] = $system->getLoadByRestaurantIds();
             $responseJson = json_encode($responseBody);
             $this->serialize($responseJson);
             $this->setHeaderContentType(self::CONTENT_TYPE_JSON);
