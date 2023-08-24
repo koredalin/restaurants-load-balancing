@@ -27,6 +27,7 @@ class HomeController extends Controller
             $responseBody['driversByRestaurantIdFinal'] = $system->getDriverArrsByRestaurantId();
             $responseBody['restaurantsFinalLoad'] = $system->getLoadByRestaurants();
             $responseJson = json_encode($responseBody);
+            $this->serialize($responseJson);
             $this->setHeaderContentType(self::CONTENT_TYPE_JSON);
 
             return $responseJson;
