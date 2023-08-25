@@ -59,13 +59,13 @@ class DriverBalancingSimulationTest extends TestCase
         $this->finalLoad = $this->simulator->getLoadByRestaurantIds();
 
         if (empty(array_diff($this->initLoad, $this->finalLoad))) {
-            var_dump('Empty Driver Transfers.');
+            // 'No Driver Transfers.'
             $this->assertEmpty($this->driverTransfers);
             $this->assertTrue(json_encode($this->driversByRestaurantIdInit) === json_encode($this->driversByRestaurantIdFinal));
         } else {
-            var_dump('Driver Transfers.');
+            // 'Driver Transfers made.'
             $this->assertNotEmpty($this->driverTransfers);
-            $this->assertFalse(empty(array_diff($this->driversByRestaurantIdInit, $this->driversByRestaurantIdFinal)));
+            $this->assertFalse(json_encode($this->driversByRestaurantIdInit) === json_encode($this->driversByRestaurantIdFinal));
             $this->assertTrue(count($this->initLoad) === count($this->finalLoad));
             $this->assertSame(array_keys($this->initLoad), array_keys($this->finalLoad));
         }
