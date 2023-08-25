@@ -138,10 +138,10 @@ class DriverBalancingSimulation implements DriverBalancingSimulationInterface
         $driversCount = rand($this->config['minDriversPerRestaurant'], $this->config['maxDriversPerRestaurant']);
         for ($ii = 0; $ii < $driversCount; $ii++) {
             $driverInitialCoordinates = Location::generateRandomPoint([$restaurantArr[2], $restaurantArr[3]], $this->config['driverMaxTransferDistanceInMeters']);
-            $driver = new Driver($driverStartId + $ii, $restaurantArr[0], $driverInitialCoordinates[0], $driverInitialCoordinates[1]);
+            $driver = new Driver($driverStartId + $ii, $driverInitialCoordinates[0], $driverInitialCoordinates[1]);
             $drivers[] = $driver;
         }
-        
+
         return $drivers;
     }
 

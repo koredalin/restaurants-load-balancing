@@ -16,7 +16,7 @@
 
 [x] Controllers.
 
-[x] Exceptions.
+[x] Exceptions logging.
 
 [x] Serialization.
 
@@ -26,7 +26,7 @@
 
 - "service_mode.php" - Loading file for any kind of debuging, data extraction, exceptions printing.
 
-[ ] PHP Unit tests
+[x] PHP Unit tests
 
 ## Front end
 

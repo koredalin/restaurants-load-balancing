@@ -6,7 +6,6 @@ namespace Tests\Models;
 
 use PHPUnit\Framework\TestCase;
 use Tests\TestHelper;
-use Drivers\Models\Driver;
 use Drivers\Models\Restaurant;
 use Drivers\Models\DriverBalancingSimulation as Simulator;
 
