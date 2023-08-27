@@ -30,7 +30,7 @@
 
 [x] PHP Unit tests
 
-[ ] Documentation
+[x] Documentation
 
 ## Front end
 

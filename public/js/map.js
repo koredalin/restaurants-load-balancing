@@ -40,11 +40,11 @@ function fetchApi() {
     options: {
       shadowUrl: restaurantMarkersDir + '/restaurant-shadow.png',
 
-      iconSize:     [20, 25], // size of the icon
-      shadowSize:   [17, 20], // size of the shadow
-      iconAnchor:   [10.773136, 23.348732], // point of the icon which will correspond to marker's location
-      shadowAnchor: [0, 18],  // the same for the shadow
-      popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+      iconSize:     [20, 25],
+      shadowSize:   [17, 20],
+      iconAnchor:   [10.773136, 23.348732],
+      shadowAnchor: [0, 18],
+      popupAnchor:  [-3, -36]
     }
   });
 
@@ -52,11 +52,11 @@ function fetchApi() {
     options: {
       shadowUrl: driverMarkersDir + '/driver-shadow.png',
 
-      iconSize:     [15, 20], // size of the icon
-      shadowSize:   [25, 25], // size of the shadow
-      iconAnchor:   [10.773136, 23.348732], // point of the icon which will correspond to marker's location
-      shadowAnchor: [15, 25],  // the same for the shadow
-      popupAnchor:  [-3, -36] // point from which the popup should open relative to the iconAnchor
+      iconSize:     [15, 20],
+      shadowSize:   [25, 25],
+      iconAnchor:   [10.773136, 23.348732],
+      shadowAnchor: [15, 25],
+      popupAnchor:  [-3, -36]
     }
   });
 

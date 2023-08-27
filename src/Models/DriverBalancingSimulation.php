@@ -108,8 +108,6 @@ class DriverBalancingSimulation implements DriverBalancingSimulationInterface
 
         foreach ($this->getLoadByRestaurantIds() as $restaurantLoad) {
             if ($restaurantLoad >= 0 && $isExcess && $this->globalIterations < $this->config['restaurantsWithExcessDriversMaxGlobalIterations']) {
-//                echo '<h4>Rrestaurants load after estimations: '.$this->globalIterations.'</h4>'.PHP_EOL;
-//                print_r($this->getLoadByRestaurants());
                 $this->CalculateBalance();
             }
         }
