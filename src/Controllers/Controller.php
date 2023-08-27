@@ -21,7 +21,7 @@ class Controller
     ) {
         http_response_code(HttpManager::RESPONSE_CODE_SUCCESS);
         $this->serializationDir = __DIR__ . '/../../serialization';
-        $this->errorsDir = __DIR__ . '/../../errors_log';
+        $this->errorsDir = __DIR__ . '/../../error_logs';
     }
     
     protected function setHeaderContentType(string $contentType): void

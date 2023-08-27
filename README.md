@@ -30,6 +30,26 @@ $ **php -S localhost:8000**
 
 - The one shows the drivers after their transfers between the restaurants. They have new locations and colors if they are transferred.
 
+## Documentation
+
+### Serialization
+
+- Just add a "serialization" GET parameter with value "1" to the standard API endpoint.
+
+- http://localhost{:port}/drivers/api/index.php?serialization=1
+
+- Please, keep in mind the folder "/serialization" should be created in advance with rwx rights.
+
+### Errors logging
+
+The errors logging is enabled about the API requests.
+
+- Please, keep in mind the folder "/error_logs" should be created in advance with rwx rights.
+
+### /service_mode.php file
+
+- The file should be deleted or forbidden for production usage. It could be allowed for custom ips only.
+
 ## Implemented functionalities
 
 - FoodDelivery PHP API.

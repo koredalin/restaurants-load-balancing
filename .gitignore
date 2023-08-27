@@ -1,5 +1,5 @@
 /vendor/
 nbproject/
 src/Models/Interfaces/
-errors/
+error_logs/
 serialization/
