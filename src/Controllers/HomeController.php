@@ -4,6 +4,7 @@ namespace Drivers\Controllers;
 
 use Drivers\Exceptions\ApplicationException;
 use Drivers\Models\DriverBalancingSimulation;
+use Drivers\Helpers\HttpManager;
 
 /**
  * Description of MainController
@@ -28,12 +29,12 @@ class HomeController extends Controller
             $responseBody['restaurantsFinalLoad'] = $system->getLoadByRestaurantIds();
             $responseJson = json_encode($responseBody);
             $this->serialize($responseJson);
-            $this->setHeaderContentType(self::CONTENT_TYPE_JSON);
+            $this->setHeaderContentType(HttpManager::CONTENT_TYPE_JSON);
 
             return $responseJson;
         } catch (ApplicationException | \Exception $ex) {
             $this->logError($ex->getMessage());
-            http_response_code(self::RESPONSE_CODE_INTERNAL_SERVER_ERROR);
+            http_response_code(HttpManager::RESPONSE_CODE_INTERNAL_SERVER_ERROR);
             exit;
         }
     }

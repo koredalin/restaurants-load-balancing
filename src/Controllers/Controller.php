@@ -4,6 +4,7 @@ namespace Drivers\Controllers;
 
 use Drivers\Helpers\DateTimeManager as DTM;
 use Drivers\Exceptions\ApplicationException;
+use Drivers\Helpers\HttpManager;
 
 /**
  * Description of Controller
@@ -12,18 +13,13 @@ use Drivers\Exceptions\ApplicationException;
  */
 class Controller
 {
-    protected const RESPONSE_CODE_SUCCESS = 200;
-    protected const RESPONSE_CODE_INTERNAL_SERVER_ERROR = 500;
-    protected const CONTENT_TYPE_HTML = 'text/html';
-    protected const CONTENT_TYPE_JS = 'application/javascript';
-    protected const CONTENT_TYPE_JSON = 'application/json';
     protected string $serializationDir;
     protected string $errorsDir;
 
     public function __construct(
         protected array $config
     ) {
-        http_response_code(self::RESPONSE_CODE_SUCCESS);
+        http_response_code(HttpManager::RESPONSE_CODE_SUCCESS);
         $this->serializationDir = __DIR__ . '/../../serialization';
         $this->errorsDir = __DIR__ . '/../../errors_log';
     }
