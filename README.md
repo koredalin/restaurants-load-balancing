@@ -34,9 +34,9 @@ $ **php -S localhost:8000**
 
 ### Serialization
 
-- Just add a "serialization" GET parameter with value "1" to the standard API endpoint.
+- Just add a "serialize" GET parameter with value "1" to the standard API endpoint.
 
-- http://localhost{:port}/drivers/api/index.php?serialization=1
+- http://localhost{:port}/drivers/api/index.php?serialize=1
 
 - Please, keep in mind the folder "/serialization" should be created in advance with rwx rights.
 
