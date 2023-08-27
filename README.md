@@ -1,5 +1,9 @@
 # Food Delivery Drivers Tranfers Between Restaurants
 
+The program estimates and visualize which free restaurant drivers should be transferred to neighbors restaurants.
+
+The aim is minimum number of restaurants with higher load.
+
 ## Installation
 
 1. Unpack the zip file.
