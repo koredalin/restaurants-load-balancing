@@ -144,17 +144,26 @@ function fetchApi() {
   // Drivers transfers text
   let explainDriverTransfers = function () {
     let transfersDiv = document.getElementById('drivers_transfers');
-    let ol = document.createElement("ol");
+    let spanFrom = document.createElement("span");
+    let spanTo = document.createElement("span");
     Object.values(driverTransfers).forEach ((transfer) => {
       transfer.forEach ((singleTransfer) => {
-        let li = document.createElement("li");
-        li.textContent = 'Шофьор id: ' + singleTransfer['dId']
-          + '. да се прехвърли от "' + restaurantsById[singleTransfer['transferFromRId'].toString()][1]
-          + '" към "' + restaurantsById[singleTransfer['transferToRId'].toString()][1] + '".';
-        ol.append(li);
+        let p = document.createElement("p");
+        let restaurantFrom = restaurantsById[singleTransfer['transferFromRId'].toString()];
+        spanFrom.class = restaurantFrom[4];
+        spanFrom.textContent = restaurantFrom[1];
+        let restaurantTo = restaurantsById[singleTransfer['transferToRId'].toString()];
+        spanTo.class = restaurantTo[4];
+        spanTo.textContent = restaurantTo[1];
+        let html = 'Шофьор id: ' + singleTransfer['dId'] + ' да се прехвърли от "';
+        html += '<span class="'+ restaurantFrom[4] + '">' + restaurantFrom[1] + '</span>';
+        html += '" към "';
+        html += '<span class="'+ restaurantTo[4] + '">' + restaurantTo[1] + '</span>';
+        html += '".';
+        p.innerHTML = html;
+        transfersDiv.append(p);
       });
     });
-    transfersDiv.append(ol);
   };
   explainDriverTransfers();
 })();
