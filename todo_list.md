@@ -2,6 +2,8 @@
 
 ## Back end
 
+[x] TODO List.
+
 [x] Testing index file.
 
 [x] PSR-4 loading.
@@ -28,16 +30,16 @@
 
 [x] PHP Unit tests
 
+[ ] Documentation
+
 ## Front end
 
-[ ] A HTML web page with a map.
+[x] A HTML web page with a map.
 
-[ ] Restaurants positions visualization.
+[x] Restaurants positions visualization.
 
-[ ] Drivers positions visualization.
+[x] Drivers positions visualization.
 
-[ ] A button for drivers positions change visualization.
+[x] A button for drivers positions change visualization.
 
-[ ] Drivers positions visualization after the optimization, on the button click.
-
-[ ] Eventually - How drivers move-change their positions visualization.
+[x] Drivers positions visualization after the optimization, on the button click.

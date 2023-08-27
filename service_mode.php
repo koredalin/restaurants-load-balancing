@@ -17,7 +17,7 @@
 
     use Drivers\Models\DriverBalancingSimulation;
 
-    $config = require_once './src/config/config.php';
+    $config = require_once './config/config.php';
 
     $system = new DriverBalancingSimulation($config);
     $system->CreateRandomFreeDrivers();

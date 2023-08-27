@@ -9,5 +9,5 @@ namespace Tests;
  */
 class TestHelper
 {
-    public const CONFIG_FILE_PATH = __DIR__ . '/../src/config/config.php';
+    public const CONFIG_FILE_PATH = __DIR__ . '/../config/config.php';
 }

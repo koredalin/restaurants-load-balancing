@@ -88,7 +88,7 @@ class Restaurant
     
     public function addDriver(Driver $driver): void
     {
-        $driver->lat = $this->lat;
+        $driver->lat = $this->lat - 0.0005;
         $driver->lng = $this->lng;
         $driver->isTransferred = true;
         $this->drivers[] = $driver;

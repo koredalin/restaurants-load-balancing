@@ -5,7 +5,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 -->
 <html>
   <head>
-    <title>TODO supply a title</title>
+    <title>Drivers Transfers Between Restaurants</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -15,14 +15,20 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
       integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
       crossorigin=""></script>
     <style>
-      #map { height: 280px; }
+      #map { height: 480px; }
+      button { margin-top: 20px; }
+      #show_drivers { margin-right: 30px; }
+      
     </style>
   </head>
   <body>
     <h2>Drivers Transfers Between Restaurants</h2>
 
     <div id="map"></div>
-    <div>TODO write content</div>
+    <div>
+      <button type="button" id="drivers">Drivers Locations</button>
+      <button type="button" id="transferred_drivers">Transferred Drivers Locations</button>
+    </div>
 
     <script src="js/map.js"></script>
   </body>
