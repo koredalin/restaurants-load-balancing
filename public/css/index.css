@@ -1,0 +1,15 @@
+#map {
+    height: 480px;
+}
+
+button {
+    margin-top: 20px;
+}
+
+#drivers_locations {
+    margin-right: 30px;
+}
+
+li {
+  margin-bottom: 10px;
+}

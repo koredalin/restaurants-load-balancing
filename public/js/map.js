@@ -26,12 +26,23 @@ function fetchApi() {
   let foodDeliveryData = await fetchApi();
 
   let restaurants = foodDeliveryData['restaurants'];
-  let driversByRestaurantId = foodDeliveryData['driversByRestaurantIdInit'];
-  let driversByRestaurantIdFinal = foodDeliveryData['driversByRestaurantIdFinal'];
   let restaurantMarkers = [];
   let driversByRestaurantIdMarkersInit = {};
   let driversByRestaurantIdMarkersFinal = {};
 
+  let getRestaurantsById = function () {
+    let restaurantsMap = {};
+    for (const [key, restaurant] of Object.entries(restaurants)) {
+      restaurantsMap[restaurant[0]] = restaurant;
+    }
+
+    return restaurantsMap;
+  };
+
+  const driversByRestaurantId = foodDeliveryData['driversByRestaurantIdInit'];
+  const driversByRestaurantIdFinal = foodDeliveryData['driversByRestaurantIdFinal'];
+  const driverTransfers = foodDeliveryData['driverTransfers'];
+  const restaurantsById = getRestaurantsById();
   const imagesDir = '/drivers/public/images';
   const driverMarkersDir = imagesDir + '/driverMarkers';
   const restaurantMarkersDir = imagesDir + '/restaurantMarkers';
@@ -91,7 +102,6 @@ function fetchApi() {
     createRestaurantDriversFinalList(restaurantId, restaurantColor, driversByRestaurantIdFinal[restaurantId.toString()]);
   });
 
-
   let clearDriversIcons = function () {
     Object.values(driversByRestaurantIdMarkersInit).forEach ((restaurantDriversMarkers) => {
       restaurantDriversMarkers.forEach((restaurantDriverMarker) => {
@@ -123,11 +133,28 @@ function fetchApi() {
     });
   };
 
-  document.getElementById('drivers').onclick = function () {
+  document.getElementById('drivers_locations').onclick = function () {
     printInitDriversLocations();
   };
 
-  document.getElementById('transferred_drivers').onclick = function () {
+  document.getElementById('transferred_drivers_locations').onclick = function () {
     printFinalDriversLocations();
   };
+  
+  // Drivers transfers text
+  let explainDriverTransfers = function () {
+    let transfersDiv = document.getElementById('drivers_transfers');
+    let ol = document.createElement("ol");
+    Object.values(driverTransfers).forEach ((transfer) => {
+      transfer.forEach ((singleTransfer) => {
+        let li = document.createElement("li");
+        li.textContent = 'Шофьор id: ' + singleTransfer['dId']
+          + '. да се прехвърли от "' + restaurantsById[singleTransfer['transferFromRId'].toString()][1]
+          + '" към "' + restaurantsById[singleTransfer['transferToRId'].toString()][1] + '".';
+        ol.append(li);
+      });
+    });
+    transfersDiv.append(ol);
+  };
+  explainDriverTransfers();
 })();
