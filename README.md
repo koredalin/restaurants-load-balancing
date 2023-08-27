@@ -42,13 +42,13 @@ $ **php -S localhost:8000**
 
 - http://localhost{:port}/drivers/api/index.php?serialize=1
 
-- Please, keep in mind the folder "/serialization" should be created in advance with rwx rights.
+- Please, keep in mind the folder "/serialization" should be created in advance with suitable rwx rights.
 
 ### Errors logging
 
 The errors logging is enabled about the API requests.
 
-- Please, keep in mind the folder "/error_logs" should be created in advance with rwx rights.
+- Please, keep in mind the folder "/error_logs" should be created in advance with suitable rwx rights.
 
 ### /service_mode.php file
 
