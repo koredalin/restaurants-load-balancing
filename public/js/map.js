@@ -6,8 +6,16 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 async function getFoodDeliveryData() {
-  const response = await fetch("/drivers/api");
-  return await response.json();
+  try {
+    const response = await fetch("/drivers/api");
+    if (!response.ok) {
+      throw new Error("Network response was not OK");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("There has been a problem with your fetch operation:", error);
+  }
 };
 
 function fetchApi() {
