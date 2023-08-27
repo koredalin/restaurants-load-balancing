@@ -1,4 +1,4 @@
-var map = L.map('map').setView([42.67146376180638, 23.264471635109555], 12.4);
+let map = L.map('map').setView([42.67146376180638, 23.264471635109555], 12.4);
 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
   maxZoom: 19,
@@ -15,22 +15,20 @@ function fetchApi() {
 }
 
 (async() => {
-  var foodDeliveryData = await fetchApi();
+  let foodDeliveryData = await fetchApi();
 
-  console.log(foodDeliveryData);
-
-  var restaurants = foodDeliveryData['restaurants'];
-  var driversByRestaurantId = foodDeliveryData['driversByRestaurantIdInit'];
-  var driversByRestaurantIdFinal = foodDeliveryData['driversByRestaurantIdFinal'];
-  var restaurantMarkers = [];
-  var driversByRestaurantIdMarkersInit = {};
-  var driversByRestaurantIdMarkersFinal = {};
+  let restaurants = foodDeliveryData['restaurants'];
+  let driversByRestaurantId = foodDeliveryData['driversByRestaurantIdInit'];
+  let driversByRestaurantIdFinal = foodDeliveryData['driversByRestaurantIdFinal'];
+  let restaurantMarkers = [];
+  let driversByRestaurantIdMarkersInit = {};
+  let driversByRestaurantIdMarkersFinal = {};
 
   const imagesDir = '/drivers/public/images';
   const driverMarkersDir = imagesDir + '/driverMarkers';
   const restaurantMarkersDir = imagesDir + '/restaurantMarkers';
 
-  var RestaurantIcon = L.Icon.extend({
+  let RestaurantIcon = L.Icon.extend({
     options: {
       shadowUrl: restaurantMarkersDir + '/restaurant-shadow.png',
 
@@ -42,7 +40,7 @@ function fetchApi() {
     }
   });
 
-  var DriverIcon = L.Icon.extend({
+  let DriverIcon = L.Icon.extend({
     options: {
       shadowUrl: driverMarkersDir + '/driver-shadow.png',
 
@@ -54,7 +52,7 @@ function fetchApi() {
     }
   });
 
-  var createRestaurantDriversInitList = function (restaurantId, restaurantColor, drivers) {
+  let createRestaurantDriversInitList = function (restaurantId, restaurantColor, drivers) {
     let driverMarker = new DriverIcon({iconUrl: driverMarkersDir + '/' + restaurantColor + '-driver.png'});
     driversByRestaurantIdMarkersInit[restaurantId.toString()] = [];
     drivers.forEach (driver => {
@@ -62,11 +60,15 @@ function fetchApi() {
     });
   };
 
-  var createRestaurantDriversFinalList = function (restaurantId, restaurantColor, drivers) {
+  let createRestaurantDriversFinalList = function (restaurantId, restaurantColor, drivers) {
     let driverMarker = new DriverIcon({iconUrl: driverMarkersDir + '/' + restaurantColor + '-driver.png'});
     driversByRestaurantIdMarkersFinal[restaurantId.toString()] = [];
+    let transferDriversCount = 0;
+    const transferredDriverLatDecrement = 0.0002;
+    const transferredDriverLngIncrement = 0.00002;
     drivers.forEach (driver => {
-      driversByRestaurantIdMarkersFinal[restaurantId.toString()].push(new L.Marker([driver[1], driver[2]], {icon: driverMarker}).bindPopup('driverId: ' + driver[0]));
+      let driverLat = driver[3] ? driver[1] - (++transferDriversCount * transferredDriverLatDecrement) : driver[1];
+      driversByRestaurantIdMarkersFinal[restaurantId.toString()].push(new L.Marker([driverLat, driver[2] + transferredDriverLngIncrement], {icon: driverMarker}).bindPopup('driverId: ' + driver[0]));
     });
   };
 
@@ -82,7 +84,7 @@ function fetchApi() {
   });
 
 
-  var clearDriversIcons = function () {
+  let clearDriversIcons = function () {
     Object.values(driversByRestaurantIdMarkersInit).forEach ((restaurantDriversMarkers) => {
       restaurantDriversMarkers.forEach((restaurantDriverMarker) => {
         map.removeLayer(restaurantDriverMarker);
@@ -95,7 +97,7 @@ function fetchApi() {
     });
   };
 
-  var printInitDriversLocations = function () {
+  let printInitDriversLocations = function () {
     clearDriversIcons();
     Object.values(driversByRestaurantIdMarkersInit).forEach ((restaurantDriversMarkers) => {
       restaurantDriversMarkers.forEach((restaurantDriverMarker) => {
@@ -104,7 +106,7 @@ function fetchApi() {
     });
   };
 
-  var printFinalDriversLocations = function () {
+  let printFinalDriversLocations = function () {
     clearDriversIcons();
     Object.values(driversByRestaurantIdMarkersFinal).forEach ((restaurantDriversMarkers) => {
       restaurantDriversMarkers.forEach((restaurantDriverMarker) => {

@@ -88,7 +88,7 @@ class Restaurant
     
     public function addDriver(Driver $driver): void
     {
-        $driver->lat = $this->lat - 0.0005;
+        $driver->lat = $this->lat;
         $driver->lng = $this->lng;
         $driver->isTransferred = true;
         $this->drivers[] = $driver;
@@ -121,7 +121,7 @@ class Restaurant
     {
         $this->orders = rand($this->config['minOrdersPerRestaurant'], $this->config['maxOrdersPerRestaurant']);
     }
-    
+
     public function calculateLoad(): void
     {
         $this->load = (int) round($this->orders / 2 - count($this->drivers));
