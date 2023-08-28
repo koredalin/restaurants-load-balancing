@@ -29,5 +29,5 @@ return [
      * So, at later moment there could have better possible driver transfers.
      * If set a number less then 2 - only one global iteration will be made.
      */
-    'restaurantsWithExcessDriversMaxGlobalIterations' => 2,
+    'restaurantsWithExcessDriversMaxGlobalIterations' => 1,
 ];

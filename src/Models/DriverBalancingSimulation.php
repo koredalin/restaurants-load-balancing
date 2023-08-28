@@ -98,19 +98,7 @@ class DriverBalancingSimulation implements DriverBalancingSimulationInterface
         $this->driverTransfers = array_values($this->driverTransfers);
         $this->globalIterations++;
 
-        $isExcess = false;
-        foreach ($this->getLoadByRestaurantIds() as $restaurantLoad) {
-            if ($restaurantLoad < -1) {
-                $isExcess = true;
-                break;
-            }
-        }
-
-        foreach ($this->getLoadByRestaurantIds() as $restaurantLoad) {
-            if ($restaurantLoad >= 0 && $isExcess && $this->globalIterations < $this->config['restaurantsWithExcessDriversMaxGlobalIterations']) {
-                $this->CalculateBalance();
-            }
-        }
+        $this->repeatBalanceCalculations();
     }
 
     public function getLoadByRestaurantIds(): array
@@ -329,5 +317,30 @@ class DriverBalancingSimulation implements DriverBalancingSimulationInterface
         }
 
         throw new ApplicationException('No restaurant with driver id: ' . $driverId);
+    }
+
+    /**
+     * If we found that there are useless transfers (A transfer from restaurant in need.) on the first estimations block..
+     * These restaurants are skipped from the estimations.
+     * But the estimations and transfers continue.
+     * So, at later moment there could have better possible driver transfers.
+     *
+     * @return void
+     */
+    private function repeatBalanceCalculations(): void
+    {
+        $isExcess = false;
+        foreach ($this->getLoadByRestaurantIds() as $restaurantLoad) {
+            if ($restaurantLoad < -1) {
+                $isExcess = true;
+                break;
+            }
+        }
+
+        foreach ($this->getLoadByRestaurantIds() as $restaurantLoad) {
+            if ($restaurantLoad >= 0 && $isExcess && $this->globalIterations < $this->config['restaurantsWithExcessDriversMaxGlobalIterations']) {
+                $this->CalculateBalance();
+            }
+        }
     }
 }

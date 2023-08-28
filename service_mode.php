@@ -25,7 +25,7 @@
     echo '<pre>';
     echo '<h3>Initial restaurants load.</h3>'.PHP_EOL;
     print_r($system->getLoadByRestaurantIds());
-    echo '<h3>Rrestaurants until estimations.</h3>'.PHP_EOL;
+    echo '<h3>Restaurants until estimations.</h3>'.PHP_EOL;
     $system->CalculateBalance();
     echo '<h3>Final Rrestaurants load.</h3>'.PHP_EOL;
     print_r($system->getLoadByRestaurantIds());
