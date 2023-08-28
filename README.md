@@ -54,6 +54,14 @@ The errors logging is enabled about the API requests.
 
 - The file should be deleted or forbidden for production usage. It could be allowed for custom ips only.
 
+### Repeat Balance Calculations
+
+- DriverBalancingSimulation::repeatBalanceCalculations()
+
+If we found that there are useless transfers (A transfer from restaurant in need.) on the first estimations block.. These restaurants are skipped from the estimations. But the estimations and transfers continue. So, at later moment there could have better possible driver transfers.
+
+I think that this method could be helpful in higher number of restaurants. It is not helpful for our case after my tests. So, _it is switched off_ from the config file.
+
 ## Implemented functionalities
 
 - FoodDelivery PHP API.
