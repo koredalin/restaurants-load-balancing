@@ -43,3 +43,9 @@
 [x] A button for drivers positions change visualization.
 
 [x] Drivers positions visualization after the optimization, on the button click.
+
+[x] A restaurants before and after transfers report table.
+
+[x] Drivers transfers text explanation.
+
+[x] Rendering with custom settings.
