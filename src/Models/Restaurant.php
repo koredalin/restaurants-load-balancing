@@ -21,6 +21,7 @@ class Restaurant
      */
     private array $driversMap;
     private int $orders;
+    private string $markerColor;
     public int $load;
     /**
      * If the restaurant is more than 6km than the nearest driver.
@@ -127,6 +128,20 @@ class Restaurant
         $this->load = (int) round($this->orders / 2 - count($this->drivers));
     }
 
+    public function getRestaurantArr(): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'lat' => $this->lat,
+            'lng' => $this->lng,
+            'markerColor' => $this->markerColor,
+            'orders' => $this->orders,
+            'load' => $this->load,
+            'drivers' => $this->getDriverArrs(),
+        ];
+    }
+
     private function setRestaurant(int $restaurantId): void
     {
         foreach ($this->config['restaurants'] as $restaurantArr) {
@@ -135,6 +150,7 @@ class Restaurant
                 $this->name = $restaurantArr[1];
                 $this->lat = $restaurantArr[2];
                 $this->lng = $restaurantArr[3];
+                $this->markerColor = $restaurantArr[4];
 
                 return;
             }

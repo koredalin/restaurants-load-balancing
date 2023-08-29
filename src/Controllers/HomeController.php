@@ -17,16 +17,13 @@ class HomeController extends Controller
     {
         try {
             $responseBody = [];
-            $responseBody['restaurants'] = $this->config['restaurants'];
             $system = new DriverBalancingSimulation($this->config);
             $system->CreateRandomFreeDrivers();
             $system->RandomizedLoad();
-            $responseBody['driversByRestaurantIdInit'] = $system->getDriverArrsByRestaurantId();
-            $responseBody['restaurantsInitialLoad'] = $system->getLoadByRestaurantIds();
+            $responseBody['restaurantsInit'] = $system->getRestaurantByIdArrs();
             $system->CalculateBalance();
             $responseBody['driverTransfers'] = $system->getDriverTransfers();
-            $responseBody['driversByRestaurantIdFinal'] = $system->getDriverArrsByRestaurantId();
-            $responseBody['restaurantsFinalLoad'] = $system->getLoadByRestaurantIds();
+            $responseBody['restaurantsFinal'] = $system->getRestaurantByIdArrs();
             $responseJson = json_encode($responseBody);
             $this->serialize($responseJson);
             $this->setHeaderContentType(HttpManager::CONTENT_TYPE_JSON);

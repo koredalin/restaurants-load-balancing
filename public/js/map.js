@@ -25,24 +25,30 @@ function fetchApi() {
 (async() => {
   let foodDeliveryData = await fetchApi();
 
-  let restaurants = foodDeliveryData['restaurants'];
   let restaurantMarkers = [];
   let driversByRestaurantIdMarkersInit = {};
   let driversByRestaurantIdMarkersFinal = {};
 
-  let getRestaurantsById = function () {
-    let restaurantsMap = {};
-    for (const [key, restaurant] of Object.entries(restaurants)) {
-      restaurantsMap[restaurant[0]] = restaurant;
+  const restaurantsInit = foodDeliveryData['restaurantsInit'];
+  const restaurantsFinal = foodDeliveryData['restaurantsFinal'];
+  let driversByRestaurantId;
+  let driversByRestaurantIdFinal;
+  let driverIdsByRestaurantId;
+  let driverIdsByRestaurantIdFinal;
+  let setRestaurants = function () {
+    driversByRestaurantId = {};
+    driversByRestaurantIdFinal = {};
+    driverIdsByRestaurantId = {};
+    driverIdsByRestaurantIdFinal = {};
+    for (const [restaurantId, restaurant] of Object.entries(restaurantsInit)) {
+      driversByRestaurantId[restaurantId] = restaurant.drivers;
+      driverIdsByRestaurantId[restaurantId] = restaurant.drivers.map(driver => driver[0]);
+      driversByRestaurantIdFinal[restaurantId] = restaurantsFinal[restaurantId]['drivers'];
+      driverIdsByRestaurantIdFinal[restaurantId] = driversByRestaurantIdFinal[restaurantId].map(driver => driver[0]);
     }
-
-    return restaurantsMap;
   };
-
-  const driversByRestaurantId = foodDeliveryData['driversByRestaurantIdInit'];
-  const driversByRestaurantIdFinal = foodDeliveryData['driversByRestaurantIdFinal'];
+  setRestaurants();
   const driverTransfers = foodDeliveryData['driverTransfers'];
-  const restaurantsById = getRestaurantsById();
   const imagesDir = '/drivers/public/images';
   const driverMarkersDir = imagesDir + '/driverMarkers';
   const restaurantMarkersDir = imagesDir + '/restaurantMarkers';
@@ -93,14 +99,13 @@ function fetchApi() {
 
   driversByRestaurantIdMarkersInit = {};
   driversByRestaurantIdMarkersFinal = {};
-  restaurants.forEach ((restaurant) => {
-    let restaurantId = restaurant[0];
-    let restaurantColor = restaurant[4];
+  for (const [restaurantId, restaurant] of Object.entries(restaurantsInit)) {
+    let restaurantColor = restaurant['markerColor'];
     let restaurantMarker = new RestaurantIcon({iconUrl: restaurantMarkersDir + '/' + restaurantColor + '-restaurant.png'});
-    restaurantMarkers.push(new L.Marker([restaurant[2], restaurant[3]], {icon: restaurantMarker}).bindPopup(restaurant[1]).addTo(map));
+    restaurantMarkers.push(new L.Marker([restaurant['lat'], restaurant['lng']], {icon: restaurantMarker}).bindPopup(restaurant['name']).addTo(map));
     createRestaurantDriversInitList(restaurantId, restaurantColor, driversByRestaurantId[restaurantId.toString()]);
     createRestaurantDriversFinalList(restaurantId, restaurantColor, driversByRestaurantIdFinal[restaurantId.toString()]);
-  });
+  };
 
   let clearDriversIcons = function () {
     Object.values(driversByRestaurantIdMarkersInit).forEach ((restaurantDriversMarkers) => {
@@ -140,30 +145,65 @@ function fetchApi() {
   document.getElementById('transferred_drivers_locations').onclick = function () {
     printFinalDriversLocations();
   };
-  
+
+  let drawReportTable = function () {
+    let tBody = document.querySelector('#restaurants_table tbody');
+    Object.values(restaurantsInit).forEach ((restaurantInit) => {
+      let tr = document.createElement("tr");
+      tBody.append(tr);
+      let td = document.createElement("td");
+      td.textContent = restaurantInit.id;
+      tr.append(td);
+      td = document.createElement("td");
+      td.textContent = restaurantInit.name;
+      tr.append(td);
+      td = document.createElement("td");
+      td.textContent = restaurantInit.orders;
+      tr.append(td);
+      td = document.createElement("td");
+      td.textContent = restaurantInit.load;
+      tr.append(td);
+      td = document.createElement("td");
+      td.textContent = driverIdsByRestaurantId[restaurantInit.id];
+      tr.append(td);
+      td = document.createElement("td");
+      td.textContent = restaurantsFinal[restaurantInit.id]['load'];
+      tr.append(td);
+      td = document.createElement("td");
+      td.textContent = driverIdsByRestaurantIdFinal[restaurantInit.id];
+      tr.append(td);
+    });
+  };
+
   // Drivers transfers text
   let explainDriverTransfers = function () {
     let transfersDiv = document.getElementById('drivers_transfers');
     let spanFrom = document.createElement("span");
     let spanTo = document.createElement("span");
+    let cascadesCount = 0;
     Object.values(driverTransfers).forEach ((transfer) => {
+      let pCascade = document.createElement("p");
+      pCascade.innerHTML = '<strong>Каскада номер: ' + ++cascadesCount + '</strong>';
+      transfersDiv.append(pCascade);
       transfer.forEach ((singleTransfer) => {
-        let p = document.createElement("p");
-        let restaurantFrom = restaurantsById[singleTransfer['transferFromRId'].toString()];
+        let pSingleTransfer = document.createElement("p");
+        let restaurantFrom = restaurantsInit[singleTransfer['transferFromRId'].toString()];
         spanFrom.class = restaurantFrom[4];
         spanFrom.textContent = restaurantFrom[1];
-        let restaurantTo = restaurantsById[singleTransfer['transferToRId'].toString()];
+        let restaurantTo = restaurantsInit[singleTransfer['transferToRId'].toString()];
         spanTo.class = restaurantTo[4];
         spanTo.textContent = restaurantTo[1];
         let html = 'Шофьор id: ' + singleTransfer['dId'] + ' да се прехвърли от "';
-        html += '<span class="'+ restaurantFrom[4] + '">' + restaurantFrom[1] + '</span>';
+        html += '<span class="'+ restaurantFrom['markerColor'] + '">' + restaurantFrom['name'] + '</span>';
         html += '" към "';
-        html += '<span class="'+ restaurantTo[4] + '">' + restaurantTo[1] + '</span>';
+        html += '<span class="'+ restaurantTo['markerColor'] + '">' + restaurantTo['name'] + '</span>';
         html += '".';
-        p.innerHTML = html;
-        transfersDiv.append(p);
+        pSingleTransfer.innerHTML = html;
+        transfersDiv.append(pSingleTransfer);
       });
     });
   };
+  
+  drawReportTable();
   explainDriverTransfers();
 })();

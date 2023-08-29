@@ -101,11 +101,41 @@ class DriverBalancingSimulation implements DriverBalancingSimulationInterface
         $this->repeatBalanceCalculations();
     }
 
+    public function getRestaurantOrders(): array
+    {
+        $orders = [];
+        foreach ($this->restaurants as $restaurant) {
+            $orders[$restaurant->getId()] = $restaurant->getOrders();
+        }
+        
+        return $orders;
+    }
+
     public function getLoadByRestaurantIds(): array
     {
         $result = [];
         foreach ($this->restaurants as $restaurant) {
             $result[$restaurant->getId()] = $restaurant->load;
+        }
+
+        return $result;
+    }
+
+    public function getRestaurantByIdArrs(): array
+    {
+        $result = [];
+        foreach ($this->restaurants as $restaurant) {
+            $result[$restaurant->getId()] = $restaurant->getRestaurantArr();
+        }
+
+        return $result;
+    }
+
+    public function getDriverArrsByRestaurantId(): array
+    {
+        $result = [];
+        foreach ($this->restaurants as $restaurant) {
+            $result[$restaurant->getId()] = $restaurant->getDriverArrs();
         }
 
         return $result;
@@ -143,16 +173,6 @@ class DriverBalancingSimulation implements DriverBalancingSimulationInterface
         }
 
         return $this->restaurants[$this->restaurantsMap[$id]];
-    }
-    
-    public function getDriverArrsByRestaurantId(): array
-    {
-        $result = [];
-        foreach ($this->restaurants as $restaurant) {
-            $result[$restaurant->getId()] = $restaurant->getDriverArrs();
-        }
-
-        return $result;
     }
 
     /**
