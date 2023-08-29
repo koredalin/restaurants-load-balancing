@@ -1,9 +1,20 @@
+div#container {
+    display: none;
+}
+
 #map {
+    width: 80%;
     height: 480px;
+    margin: 0 auto;
 }
 
 button {
     margin-top: 20px;
+}
+
+#custom_settings button {
+    margin-top: 20px;
+    margin-bottom: 30px;
 }
 
 #drivers_locations {

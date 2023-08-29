@@ -2,7 +2,7 @@
 
 namespace Drivers\Models;
 
-use Drivers\Helpers\Location;
+use Drivers\Helpers\LocationManager;
 use Drivers\Models\Interfaces\DriverBalancingSimulationInterface;
 
 /**
@@ -153,7 +153,7 @@ class DriverBalancingSimulation implements DriverBalancingSimulationInterface
         $drivers = [];
         $driversCount = rand($this->config['minDriversPerRestaurant'], $this->config['maxDriversPerRestaurant']);
         for ($ii = 0; $ii < $driversCount; $ii++) {
-            $driverInitialCoordinates = Location::generateRandomPoint([$restaurantArr[2], $restaurantArr[3]], $this->config['restaurantDriversRadiusInMeters']);
+            $driverInitialCoordinates = LocationManager::generateRandomPoint([$restaurantArr[2], $restaurantArr[3]], $this->config['restaurantDriversRadiusInMeters']);
             $driver = new Driver($driverStartId + $ii, $driverInitialCoordinates[0], $driverInitialCoordinates[1]);
             $drivers[] = $driver;
         }
@@ -282,7 +282,7 @@ class DriverBalancingSimulation implements DriverBalancingSimulationInterface
                     continue;
                 }
 
-                $distanceBetweenRestaurantAndDriver = Location::calculateDistance(
+                $distanceBetweenRestaurantAndDriver = LocationManager::calculateDistance(
                     $restaurant->getLat(),
                     $restaurant->getLng(),
                     $driver->lat,

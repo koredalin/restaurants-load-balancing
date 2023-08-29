@@ -15,44 +15,70 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-    crossorigin=""></script>
+        crossorigin=""></script>
   </head>
   <body>
     <h2>Drivers Transfers Between Restaurants</h2>
 
+    <div id="custom_settings">
+      <div>
+        <p>
+          <label>Максимално разстояние на шофьор от ресторант в метри:</label>
+          <input type="number" id="restaurantDriversRadiusInMeters">
+        </p>
+        <p>
+          <label>Максимално разстояние на прехвърляне на шофьор в метри:</label>
+          <input type="number" id="driverMaxTransferDistanceInMeters">
+        </p>
+      </div>
+      <div>
+        <input type="checkbox" id="serialize" name="scales" />
+        <label for="scales">Сериализация</label>
+      </div>
+      <div>
+        <!--<p>-->
+          <button type="button" id="submit_settings">Потвърди настройки</button>
+          <button type="button" id="default_settings">Начални настройки</button>
+        <!--</p>-->
+      </div>
+    </div>
+
     <div id="map"></div>
-    <div>
-      <button type="button" id="drivers_locations">Шофьори местоположения</button>
-      <button type="button" id="transferred_drivers_locations">Прехвърлени шофьори местоположения</button>
+    <div id="container">
+      <div>
+        <button type="button" id="drivers_locations">Шофьори местоположения</button>
+        <button type="button" id="transferred_drivers_locations">Прехвърлени шофьори местоположения</button>
+      </div>
+
+      <h3>Таблица ресторанти</h3>
+      <div id="restaurants_table">
+        <table id="restaurants">
+          <thead>
+            <tr>
+              <th>Номер</th>
+              <th>Име</th>
+              <th colspan="3">Начален статус</th>
+              <th colspan="2">След прехвърляне</th>
+            </tr>
+            <tr>
+              <th> </th>
+              <th> </th>
+              <th>Бр. поръчки</th>
+              <th>Натоварване</th>
+              <th>Шофьори</th>
+              <th>Натоварване</th>
+              <th>Шофьори</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <h3>Drivers transfers</h3>
+      <div id="drivers_transfers"></div>
     </div>
 
-    <h3>Таблица ресторанти</h3>
-    <div id="restaurants_table">
-      <table id="restaurants">
-        <thead>
-          <tr>
-            <th>Номер</th>
-            <th>Име</th>
-            <th colspan="3">Начален статус</th>
-            <th colspan="2">След прехвърляне</th>
-          </tr>
-          <tr>
-            <th> </th>
-            <th> </th>
-            <th>Бр. поръчки</th>
-            <th>Натоварване</th>
-            <th>Шофьори</th>
-            <th>Натоварване</th>
-            <th>Шофьори</th>
-          </tr>
-      </thead>
-      <tbody></tbody>
-      </table>
-    </div>
-
-    <h3>Drivers transfers</h3>
-    <div id="drivers_transfers"></div>
-
+    <script src="js/initView.js"></script>
     <script src="js/map.js"></script>
   </body>
 </html>

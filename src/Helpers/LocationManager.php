@@ -7,7 +7,7 @@ namespace Drivers\Helpers;
  *
  * @author H1
  */
-class Location
+class LocationManager
 {
     private const EARTH_RADIUS_IN_METERS = 6371000;
 
