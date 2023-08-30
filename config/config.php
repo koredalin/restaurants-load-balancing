@@ -20,7 +20,7 @@ return [
     'maxOrdersPerRestaurant' => 20,
     'driverMaxTransfers' => 1,
     'maxLoadCascades' => 3,
-    'restaurantDriversRadiusInMeters' => 6000,
+    'restaurantDriversRadiusInMeters' => 3500,
     'driverMaxTransferDistanceInMeters' => 3500,
     /**
      * If we found that there are useless transfers (A transfer from restaurant in need.) on the first estimations block..
