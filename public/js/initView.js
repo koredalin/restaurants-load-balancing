@@ -11,12 +11,12 @@ async function getConfig() {
   }
 };
 
-function fetchApi() {
+function fetchApiConfig() {
   return getConfig();
 }
 
 (async() => {
-  let config = await fetchApi();
+  let config = await fetchApiConfig();
     let restaurantDriversRadiusInMeters = document.getElementById('restaurantDriversRadiusInMeters');
     restaurantDriversRadiusInMeters.placeholder = 'По подразбиране: ' + config['restaurantDriversRadiusInMeters'];
     let driverMaxTransferDistanceInMeters = document.getElementById('driverMaxTransferDistanceInMeters');

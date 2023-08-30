@@ -64,6 +64,8 @@ I think that this method could be helpful in higher number of restaurants. It is
 
 ## Implemented functionalities
 
+### Backend
+
 - FoodDelivery PHP API.
 
 - Errors logging.
@@ -72,7 +74,15 @@ I think that this method could be helpful in higher number of restaurants. It is
 
 - PHPUnit tests.
 
-- Front end visualization.
+### Front end visualization
+
+- A block for custom settings. Default config settings are shown for drivers calculation distances.
+
+- A map with all the restaurants and drivers (initial and moved positions).
+
+- A report table for the restaurants needs and their appended drivers.
+
+- Text explanation of all the drivers cascades between the restaurants.
 
 ## Used Design Patterns
 
