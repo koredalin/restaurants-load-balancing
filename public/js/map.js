@@ -7,7 +7,7 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 async function getFoodDeliveryData(hasCustomSettings) {
   function getUrl(hasCustomSettings) {
-    let defaultUrl = '/drivers/api';
+    let defaultUrl = domain + '/api/index.php';
     if (!hasCustomSettings) {
       return defaultUrl;
     }
@@ -21,7 +21,7 @@ async function getFoodDeliveryData(hasCustomSettings) {
       return defaultUrl;
     }
 
-    let url = defaultUrl + '/index.php?';
+    let url = defaultUrl + '?';
     let getParamGlue = '';
     url += restaurantDriversRadiusInMeters > 0
       ? 'restaurantDriversRadiusInMeters=' + restaurantDriversRadiusInMeters : '';
@@ -80,7 +80,7 @@ function fetchApi(hasCustomSettings) {
     };
     setRestaurants();
     const driverTransfers = foodDeliveryData['driverTransfers'];
-    const imagesDir = '/drivers/public/images';
+    const imagesDir = domain + '/public/images';
     const driverMarkersDir = imagesDir + '/driverMarkers';
     const restaurantMarkersDir = imagesDir + '/restaurantMarkers';
 

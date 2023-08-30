@@ -1,6 +1,9 @@
+const domain = 'https://score-predictor.com';
+//const domain = 'http://localhost/drivers';
+
 async function getConfig() {
   try {
-    const response = await fetch("/drivers/api/config.php");
+    const response = await fetch(domain + "/api/config.php");
     if (!response.ok) {
       throw new Error("Network response was not OK");
     }
